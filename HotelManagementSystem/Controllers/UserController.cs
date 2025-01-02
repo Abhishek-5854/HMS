@@ -1,113 +1,106 @@
-// using Microsoft.AspNetCore.Mvc;
-// using Microsoft.EntityFrameworkCore;
-// using HMS.Models;
-// using HMS.Data;
-// using System.Collections.Generic;
-// using System.Linq;
-// using System.Threading.Tasks;
+using HMS.Data;
+using HMS.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-// namespace HMS.Controllers
-// {
-//     [Route("api/[controller]")]
-//     [ApiController]
-//     public class UsersController : ControllerBase
-//     {
-//         private readonly HotelManagementDbContext _context;
+namespace HMS.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class UsersController : ControllerBase
+    {
+        private readonly HotelManagementDbContext _context;
 
-//         public UsersController(HotelManagementDbContext context)
-//         {
-//             _context = context;
-//         }
+        public UsersController(HotelManagementDbContext context)
+        {
+            _context = context;
+        }
 
-//         // GET: api/Users
-//         [HttpGet]
-//         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
-//         {
-//             return await _context.Users.Include(u => u.Role).ToListAsync();
-//         }
+        // GET: api/Users
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        {
+            return await _context.Users.ToListAsync();
+        }
 
-//         // GET: api/Users/{id}
-//         [HttpGet("{id}")]
-//         public async Task<ActionResult<User>> GetUser(int id)
-//         {
-//             var user = await _context.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.UserId == id);
+        // GET: api/Users/{id}
+        [HttpGet("{id}")]
+        public async Task<ActionResult<User>> GetUser(int id)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return user;
+        }
 
-//             if (user == null)
-//             {
-//                 return NotFound();
-//             }
+        // POST: api/Users
+        [HttpPost]
+        public async Task<ActionResult<User>> CreateUser([FromBody] User user)
+        {
+            if (user == null)
+            {
+                return BadRequest();
+            }
 
-//             return user;
-//         }
+            await _context.Users.AddAsync(user);
+            await _context.SaveChangesAsync();
 
-//         // POST: api/Users
-//         [HttpPost]
-//         public async Task<ActionResult<User>> AddUser(User user)
-//         {
-//             _context.Users.Add(user);
+            return CreatedAtAction(nameof(GetUser), new { id = user.UserId }, user);
+        }
 
-//             try
-//             {
-//                 await _context.SaveChangesAsync();
-//             }
-//             catch (DbUpdateException ex)
-//             {
-//                 Console.WriteLine(ex.Message);
-//                 return BadRequest("Unable to add user. Please check the data.");
-//             }
+        // PUT: api/Users/{id}
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateUser(int id, [FromBody] User updatedUser)
+        {
+            if (id != updatedUser.UserId)
+            {
+                return BadRequest();
+            }
 
-//             return CreatedAtAction(nameof(GetUser), new { id = user.UserId }, user);
-//         }
+            _context.Entry(updatedUser).State = EntityState.Modified;
 
-//         // PUT: api/Users/{id}
-//         [HttpPut("{id}")]
-//         public async Task<IActionResult> UpdateUser(int id, User user)
-//         {
-//             if (id != user.UserId)
-//             {
-//                 return BadRequest("User ID mismatch.");
-//             }
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UserExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
-//             _context.Entry(user).State = EntityState.Modified;
+            return NoContent();
+        }
 
-//             try
-//             {
-//                 await _context.SaveChangesAsync();
-//             }
-//             catch (DbUpdateConcurrencyException)
-//             {
-//                 if (!UserExists(id))
-//                 {
-//                     return NotFound();
-//                 }
-//                 else
-//                 {
-//                     throw;
-//                 }
-//             }
+        // DELETE: api/Users/{id}
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
 
-//             return NoContent();
-//         }
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
 
-//         // DELETE: api/Users/{id}
-//         [HttpDelete("{id}")]
-//         public async Task<IActionResult> DeleteUser(int id)
-//         {
-//             var user = await _context.Users.FindAsync(id);
-//             if (user == null)
-//             {
-//                 return NotFound();
-//             }
+            return NoContent();
+        }
 
-//             _context.Users.Remove(user);
-//             await _context.SaveChangesAsync();
-
-//             return NoContent();
-//         }
-
-//         private bool UserExists(int id)
-//         {
-//             return _context.Users.Any(e => e.UserId == id);
-//         }
-//     }
-// }
+        private bool UserExists(int id)
+        {
+            return _context.Users.Any(e => e.UserId == id);
+        }
+    }
+}

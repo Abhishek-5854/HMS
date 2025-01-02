@@ -1,6 +1,8 @@
+using HMS.Data;
 using HMS.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace HMS.Controllers
 {
@@ -8,9 +10,9 @@ namespace HMS.Controllers
     [Route("api/[controller]")]
     public class StaffController : ControllerBase
     {
-        private readonly DbContext _context;
+        private readonly HotelManagementDbContext _context;
 
-        public StaffController(DbContext context)
+        public StaffController(HotelManagementDbContext context)
         {
             _context = context;
         }
@@ -39,13 +41,14 @@ namespace HMS.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateStaff([FromBody] Staff staff)
         {
-            if (!ModelState.IsValid)
+            if (staff == null)
             {
-                return BadRequest(ModelState);
+                return BadRequest();
             }
 
             await _context.Set<Staff>().AddAsync(staff);
             await _context.SaveChangesAsync();
+
             return CreatedAtAction(nameof(GetStaffById), new { id = staff.StaffId }, staff);
         }
 

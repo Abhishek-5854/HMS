@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\ASHAR286\\Desktop\\project\\HotelMS\\HMS\\HotelManagementSystem\\HotelManagementSystem.csproj": {}
+    "C:\\Users\\agupt184\\Desktop\\FMS\\HMS\\HotelManagementSystem\\HotelManagementSystem.csproj": {}
   },
   "projects": {
-    "C:\\Users\\ASHAR286\\Desktop\\project\\HotelMS\\HMS\\HotelManagementSystem\\HotelManagementSystem.csproj": {
+    "C:\\Users\\agupt184\\Desktop\\FMS\\HMS\\HotelManagementSystem\\HotelManagementSystem.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ASHAR286\\Desktop\\project\\HotelMS\\HMS\\HotelManagementSystem\\HotelManagementSystem.csproj",
+        "projectUniqueName": "C:\\Users\\agupt184\\Desktop\\FMS\\HMS\\HotelManagementSystem\\HotelManagementSystem.csproj",
         "projectName": "HotelManagementSystem",
-        "projectPath": "C:\\Users\\ASHAR286\\Desktop\\project\\HotelMS\\HMS\\HotelManagementSystem\\HotelManagementSystem.csproj",
-        "packagesPath": "C:\\Users\\ASHAR286\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ASHAR286\\Desktop\\project\\HotelMS\\HMS\\HotelManagementSystem\\obj\\",
+        "projectPath": "C:\\Users\\agupt184\\Desktop\\FMS\\HMS\\HotelManagementSystem\\HotelManagementSystem.csproj",
+        "packagesPath": "C:\\Users\\agupt184\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\agupt184\\Desktop\\FMS\\HMS\\HotelManagementSystem\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\ASHAR286\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\agupt184\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"

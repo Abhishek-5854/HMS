@@ -1,15 +1,14 @@
-using Microsoft.AspNetCore.Mvc;
-using HMS.Models;
 using HMS.Data;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using HMS.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace HMS.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class BookingController : ControllerBase
     {
         private readonly HotelManagementDbContext _context;
@@ -26,33 +25,36 @@ namespace HMS.Controllers
             return await _context.Bookings.ToListAsync();
         }
 
-        // GET: api/Booking/5
+        // GET: api/Booking/{id}
         [HttpGet("{id}")]
         public async Task<ActionResult<Booking>> GetBooking(int id)
         {
             var booking = await _context.Bookings.FindAsync(id);
-
             if (booking == null)
             {
                 return NotFound();
             }
-
             return booking;
         }
 
         // POST: api/Booking
         [HttpPost]
-        public async Task<ActionResult<Booking>> PostBooking(Booking booking)
+        public async Task<ActionResult<Booking>> PostBooking([FromBody] Booking booking)
         {
+            if (booking == null)
+            {
+                return BadRequest();
+            }
+
             _context.Bookings.Add(booking);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetBooking), new { id = booking.BookingId }, booking);
         }
 
-        // PUT: api/Booking/5
+        // PUT: api/Booking/{id}
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutBooking(int id, Booking booking)
+        public async Task<IActionResult> PutBooking(int id, [FromBody] Booking booking)
         {
             if (id != booking.BookingId)
             {
@@ -80,7 +82,7 @@ namespace HMS.Controllers
             return NoContent();
         }
 
-        // DELETE: api/Booking/5
+        // DELETE: api/Booking/{id}
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBooking(int id)
         {
